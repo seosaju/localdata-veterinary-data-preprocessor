@@ -1,8 +1,9 @@
 import logging
 
+import numpy as np
 import pandas as pd
 
-from preprocessor import subset_manager, coordinate_translator
+from preprocessor import subset_manager, coordinate_translator, dataframe_separator
 from reader import csv_reader
 
 column_list = ['번호', '관리번호', '영업상태구분코드', '영업상태명', '상세영업상태코드', '상세영업상태명',
@@ -26,6 +27,21 @@ logging.basicConfig(
     datefmt='%m/%d/%Y %I:%M:%S %p',
     level=logging.INFO)
 
+
+def create_csv_files(df: pd.DataFrame, x: str, y: str, path: str) -> None:
+    have_xy = dataframe_separator.have_coordinate(df, x, y)
+    save_csv(dataframe_separator.have_road_address(have_xy), path, '좌표있음-주소있음')
+    save_csv(dataframe_separator.empty_road_address(have_xy), path, '좌표있음-주소없음')
+
+    not_have_xy = dataframe_separator.empty_coordinate(df, x, y)
+    save_csv(dataframe_separator.have_road_address(not_have_xy), path, '좌표없음-주소있음')
+    save_csv(dataframe_separator.empty_road_address(not_have_xy), path, '좌표없음-주소없음')
+
+
+def save_csv(df: pd.DataFrame, path: str, filename: str) -> None:
+    df.to_csv(f'data/{path}/{filename}.csv', na_rep='', encoding='cp949', index=False)
+
+
 if __name__ == "__main__":
     df: pd.DataFrame
 
@@ -41,5 +57,22 @@ if __name__ == "__main__":
     logging.info('transform coordinate system')
     df = coordinate_translator.transform_coordinate_system(df, x_column, y_column, 'EPSG:2097', 'EPSG:4326')
 
-    logging.info('save result.csv file')
-    df.to_csv("data/result.csv", na_rep='', encoding='cp949')
+    # replace coordinate inf to nan
+    df = df.replace(np.inf, np.nan)
+
+    logging.info('separate data frame')
+
+    # 영업중
+    opened_df = dataframe_separator.open_hospital(df)
+    logging.info('영업중인 병원 .csv 저장')
+    create_csv_files(opened_df, x_column, y_column, "영업중")
+
+    # 휴업중
+    suspended_df = dataframe_separator.suspended_hospital(df)
+    logging.info('휴업중인 병원 .csv 저장')
+    create_csv_files(suspended_df, x_column, y_column, "휴업중")
+
+    # 폐업, 말소
+    closed_df = dataframe_separator.closed_hospital(df)
+    logging.info('폐업-말소된 병원 .csv 저장')
+    create_csv_files(closed_df, x_column, y_column, "폐업-말소")
