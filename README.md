@@ -7,7 +7,7 @@ LOCALDATA (https://www.localdata.go.kr/) 에서 제공하는 동물병원 데이
 ---
 #### 개발 환경
 
-Python3.9
+Python3.9 (venv/bin/python)
 
 ```
 Package         Version
@@ -24,4 +24,11 @@ six             1.16.0
 wheel           0.36.2
 ```
 
-Mac OS Monterey (Macbook '14 M1 Pro)
+MacOS Monterey (Macbook '14 M1 Pro)
+
+---
+#### 실행 방법 (MacOS or Linux)
+
+```
+sh run.sh
+```
