@@ -30,12 +30,12 @@ logging.basicConfig(
 
 def create_csv_files(df: pd.DataFrame, x: str, y: str, path: str) -> None:
     have_xy = dataframe_separator.have_coordinate(df, x, y)
-    save_csv(dataframe_separator.have_road_address(have_xy), path, '좌표있음-주소있음')
-    save_csv(dataframe_separator.empty_road_address(have_xy), path, '좌표있음-주소없음')
+    save_csv(dataframe_separator.have_road_address(have_xy), path, path + '-좌표O-도로명주소O')
+    save_csv(dataframe_separator.empty_road_address(have_xy), path, path + '-좌표O-도로명주소X')
 
     not_have_xy = dataframe_separator.empty_coordinate(df, x, y)
-    save_csv(dataframe_separator.have_road_address(not_have_xy), path, '좌표없음-주소있음')
-    save_csv(dataframe_separator.empty_road_address(not_have_xy), path, '좌표없음-주소없음')
+    save_csv(dataframe_separator.have_road_address(not_have_xy), path, path + '-좌표X-도로명주소O')
+    save_csv(dataframe_separator.empty_road_address(not_have_xy), path, path + '-좌표X-도로명주소X')
 
 
 def save_csv(df: pd.DataFrame, path: str, filename: str) -> None:
