@@ -1,3 +1,5 @@
+import logging
+
 import pandas as pd
 
 from preprocessor import subset_manager, coordinate_translator
@@ -19,16 +21,25 @@ rename_column_dict = {'관리번호': 'MANAGEMENT_NUMBER',
                       '좌표정보(x)': x_column,
                       '좌표정보(y)': y_column}
 
+logging.basicConfig(
+    format='%(asctime)s:%(levelname)s:%(message)s',
+    datefmt='%m/%d/%Y %I:%M:%S %p',
+    level=logging.INFO)
+
 if __name__ == "__main__":
     df: pd.DataFrame
 
     # read csv file
+    logging.info("Read .csv file")
     df = csv_reader.read_dataframe("data/data.csv", encoding='cp949')
 
     # preprocessing
+    logging.info("Preprocessing pandas dataframe")
     df = subset_manager.make_subset(df, column_list)
+    logging.info('Rename column')
     df = subset_manager.rename_column(df, rename_column_dict)
+    logging.info('transform coordinate system')
     df = coordinate_translator.transform_coordinate_system(df, x_column, y_column, 'EPSG:2097', 'EPSG:4326')
 
+    logging.info('save result.csv file')
     df.to_csv("data/result.csv", na_rep='', encoding='cp949')
-
