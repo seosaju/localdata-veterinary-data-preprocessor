@@ -22,12 +22,9 @@ def transform_coordinate_system(df: pd.DataFrame, x_column: str, y_column: str,
 
 def __transform_coordinate(df: pd.DataFrame, x_column: str, y_column: str,
                            old_proj: Proj, new_proj: Proj) -> pd.DataFrame:
-
     converted = transform(old_proj, new_proj, df[x_column].values, df[y_column].values, skip_equivalent=True)
 
     df[x_column] = converted[0]
     df[y_column] = converted[1]
 
     return df
-
-

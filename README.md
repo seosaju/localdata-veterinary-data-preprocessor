@@ -5,6 +5,7 @@ LOCALDATA (https://www.localdata.go.kr/) 에서 제공하는 동물병원 데이
 현재는 티티케어 앱에 맞춰 전처리를 자동으로 진행하게끔 코드가 Fix되어 있습니다.
 
 ---
+
 #### 개발 환경
 
 Python3.9 (venv/bin/python)
@@ -27,6 +28,7 @@ wheel           0.36.2
 MacOS Monterey (Macbook '14 M1 Pro)
 
 ---
+
 #### 실행 방법 (MacOS or Linux)
 
 ```
