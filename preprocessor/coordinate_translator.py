@@ -1,5 +1,5 @@
 import pandas as pd
-from pyproj import Proj, transform
+from pyproj import Proj, Transformer
 
 
 def transform_coordinate_system(df: pd.DataFrame, x_column: str, y_column: str,
@@ -22,7 +22,9 @@ def transform_coordinate_system(df: pd.DataFrame, x_column: str, y_column: str,
 
 def __transform_coordinate(df: pd.DataFrame, x_column: str, y_column: str,
                            old_proj: Proj, new_proj: Proj) -> pd.DataFrame:
-    converted = transform(old_proj, new_proj, df[x_column].values, df[y_column].values, always_xy=True)
+    transformer = Transformer.from_proj(old_proj, new_proj, skip_equivalent=True, always_xy=True)
+
+    converted = transformer.transform(df[x_column].values, df[y_column].values)
 
     df[x_column] = converted[0]
     df[y_column] = converted[1]

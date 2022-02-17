@@ -51,7 +51,7 @@ if __name__ == "__main__":
     df = subset_manager.rename_column(df, rename_column_dict)
 
     logging.info('transform coordinate system')
-    df = coordinate_translator.transform_coordinate_system(df, x_column, y_column, 'EPSG:2097', 'EPSG:4326')
+    df = coordinate_translator.transform_coordinate_system(df, x_column, y_column, 'EPSG:5174', 'EPSG:4326')
 
     # replace coordinate inf to nan
     df = df.replace(np.inf, np.nan)
