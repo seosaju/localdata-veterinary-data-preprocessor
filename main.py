@@ -3,7 +3,7 @@ import logging
 import numpy as np
 import pandas as pd
 
-from preprocessor import subset_manager, coordinate_translator, dataframe_separator, date_transformer
+from preprocessor import subset_manager, coordinate_translator, dataframe_separator, date_transformer, text_transformer
 from reader import csv_reader
 from writer import csv_writer
 
@@ -37,12 +37,27 @@ def create_csv_files(df: pd.DataFrame, path: str) -> None:
     csv_writer.save_csv(df[~have_essential_data], path, '필수값X')
 
 
+def create_excel_files(df: pd.DataFrame, path: str) -> None:
+    have_essential_data = dataframe_separator.have_essential_data(df, x_column, y_column, address)
+    csv_writer.save_xlsx(df[have_essential_data], path, '필수값O')
+    csv_writer.save_xlsx(df[~have_essential_data], path, '필수값X')
+
+
 if __name__ == "__main__":
     df: pd.DataFrame
 
     # read csv file
     logging.info("Read .csv file")
-    df = csv_reader.read_dataframe("data/data.csv", encoding='utf-8')
+    df = csv_reader.read_dataframe("data/02_03_01_P.xlsx", "동물병원_1")
+
+    # 관리번호 텍스트로 변경
+    df = text_transformer.transform_to_text(df, '관리번호')
+    logging.info('관리번호 숫자에서 텍스트로 변경')
+
+    # 우편번호 텍스트로 변경
+    df = text_transformer.fit_to_zip_code(df, '도로명우편번호')
+    df = text_transformer.fit_to_zip_code(df, '소재지우편번호')
+    logging.info('우편번호 숫자에서 텍스트로 변경')
 
     # preprocessing
     logging.info("Preprocessing pandas dataframe")
@@ -64,15 +79,15 @@ if __name__ == "__main__":
 
     # 영업중
     opened_df = dataframe_separator.open_hospital(df)
-    logging.info('영업중인 병원 .csv 저장')
-    create_csv_files(opened_df, "영업중")
+    logging.info('영업중인 병원 .xlsx 저장')
+    create_excel_files(opened_df, "영업중")
 
     # 휴업중
     suspended_df = dataframe_separator.suspended_hospital(df)
-    logging.info('휴업중인 병원 .csv 저장')
-    create_csv_files(suspended_df, "휴업중")
+    logging.info('휴업중인 병원 .xlsx 저장')
+    create_excel_files(suspended_df, "휴업중")
 
     # 폐업, 말소
     closed_df = dataframe_separator.closed_hospital(df)
-    logging.info('폐업-말소된 병원 .csv 저장')
-    create_csv_files(closed_df, "폐업-말소")
+    logging.info('폐업-말소된 병원 .xlsx 저장')
+    create_excel_files(closed_df, "폐업-말소")
