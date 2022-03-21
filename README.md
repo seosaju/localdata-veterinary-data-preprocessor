@@ -1,5 +1,7 @@
 ### LOCALDATA 동물병원 데이터 전처리기
+
 ---
+
 LOCALDATA (https://www.localdata.go.kr/) 에서 제공하는 동물병원 데이터를 전처리하는 모듈입니다.
 
 현재는 티티케어 앱에 맞춰 전처리를 자동으로 진행하게끔 코드가 Fix되어 있습니다.
@@ -34,3 +36,14 @@ MacOS Monterey (Macbook '14 M1 Pro)
 ```
 sh run.sh
 ```
+
+---
+
+### 실행 시 주의사항
+
+처음 data.csv 파일을 만들 때, 동물병원 Excel 데이터를 다운받고 이를 .csv 파일로 변환해줘야합니다.
+
+그 이후, Excel 파일에 있는 관리번호를 data.csv에 붙여넣기를 해야합니다.
+
+Excel 셀에 15자 이상의 숫자를 입력하면 모든 숫자가 0으로 변경되는 문제
+https://docs.microsoft.com/ko-kr/office/troubleshoot/excel/last-digits-changed-to-zeros
