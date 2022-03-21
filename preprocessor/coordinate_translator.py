@@ -8,7 +8,7 @@ def transform_coordinate_system(df: pd.DataFrame, x_column: str, y_column: str,
     translate coordinate from EPSG:2097 (Bessel 1841) to EPSG:4326 (WGS 84)
     x_column: column name of x
     y_column: column name of y
-    old_system, new_system: example) 'EPSG:4326', 'EPSG:5179' ...
+    old_system, new_system: example -> 'EPSG:4326', 'EPSG:5179' ...
     :return: pandas DataFrame
     """
 
